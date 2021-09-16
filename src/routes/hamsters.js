@@ -14,12 +14,12 @@ router.get('/', async (req, res) => {
 
 router.get('/random', async (req, res) => {
     let hamsterArray = await getAllHamsters()
-    let maxIndex = hamsterArray.length //maxindex är fel namn väl.. ett mer än maxindex. väl?
-    let chosenHamsterIndex = Math.floor(Math.random() * maxIndex);
-    let randomHamster = await getOneHamster(hamsterArray[chosenHamsterIndex].id)
+    let maxValue = hamsterArray.length 
+    let randomHamsterIndex = Math.floor(Math.random() * maxValue);
+    let randomHamster = await getOneHamster(hamsterArray[randomHamsterIndex].id)
     if (randomHamster.exists) { // behövs väl inte? eftersom den är baserad på längden på listan
                                 // ska den väl alltid existera???
-        const hamster = await maybeHamster.data()
+        const hamster = await randomHamster.data()
         res.send(hamster)
     } else {
         res.sendStatus(404)
