@@ -1,8 +1,8 @@
-const express = require('express')
+/* const express = require('express')
 const router = express.Router()
 const { getAllHamsters } = require('../scripts/hamsterScripts')
 
-router.get('/', async (req, res) => {
+router.get('/cutest', async (req, res) => {
     let cutestHamster = await findCutestHamster()
     console.log(cutestHamster)
     res.send(cutestHamster)
@@ -45,4 +45,4 @@ async function findCutestHamster() {
 
 
 
-module.exports = router
+module.exports = router */

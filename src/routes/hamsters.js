@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 //const { connect } = require('../database')
 //const db = connect()
-const { getAllHamsters, getOneHamster, addNewHamster, isHamsterObject, updateHamster, isHamsterUpdate, deleteHamster } = require('../scripts/hamsterScripts')
+const { deleteDocument, getOne, findCutestHamster, getAllHamsters, addNewHamster, isHamsterObject, updateHamster, isHamsterUpdate } = require('../scripts/hamsterScripts')
 
 const HAMSTERS = 'hamsters'
 
@@ -12,11 +12,17 @@ router.get('/', async (req, res) => {
     res.send(hamsterArray)
 })
 
+router.get('/cutest', async (req, res) => {
+    let cutestHamster = await findCutestHamster()
+    console.log(cutestHamster)
+    res.status(200).send(cutestHamster)
+})
+
 router.get('/random', async (req, res) => {
     let hamsterArray = await getAllHamsters()
     let maxValue = hamsterArray.length 
     let randomHamsterIndex = Math.floor(Math.random() * maxValue);
-    let randomHamster = await getOneHamster(hamsterArray[randomHamsterIndex].id)
+    let randomHamster = await getOne(hamsterArray[randomHamsterIndex].id, HAMSTERS)
     if (randomHamster.exists) { // behövs väl inte? eftersom den är baserad på längden på listan
                                 // ska den väl alltid existera???
         const hamster = await randomHamster.data()
@@ -27,7 +33,7 @@ router.get('/random', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    let maybeHamster = await getOneHamster(req.params.id)
+    let maybeHamster = await getOne(req.params.id, HAMSTERS)
     if (maybeHamster.exists) {
         const hamster = await maybeHamster.data()
         res.send(hamster)
@@ -48,102 +54,32 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    const possibleHamster = req.body
+    let maybeHamster = await getOne(req.params.id, HAMSTERS)
+    if (!maybeHamster.exists) {
+        res.sendStatus(404)
+    } else {
+        const possibleHamster = req.body
     if (!isHamsterUpdate(possibleHamster)) {
         res.status(400).send('must send hamster update object.')
     }
     
     await updateHamster(req.params.id, possibleHamster)
     res.sendStatus(200)
+    }
+    
 
 })
 
 router.delete('/:id', async (req, res) => {
-    console.log(req.params)
-    await deleteHamster(req.params.id)
+    let maybeHamster = await getOne(req.params.id, HAMSTERS)
+    if (!maybeHamster.exists) {
+        res.sendStatus(404)
+    } else {
+    //console.log(req.params)
+    await deleteDocument(req.params.id, HAMSTERS)
     res.sendStatus(200)
+    }
 
 })
-
-// GET ALL HAMSTERS 
-/*async function getAllHamsters() {
-    const hamstersRef = db.collection(HAMSTERS);
-    const hamstersSnapshot = await hamstersRef.get();
-
-    if (hamstersSnapshot.empty) {
-        return []
-    }
-
-    const hamsterArray = [];
-    await hamstersSnapshot.forEach(async docRef => {
-        const hamster = await docRef.data();
-        hamster.id = docRef.id
-        hamsterArray.push(hamster)
-    });
-    return hamsterArray
-} 
-
-// GET ONE HAMSTER FROM ID 
-async function getOneHamster(id) {
-    console.log('looking for a specific hamster')
-    const docRef = db.collection(HAMSTERS).doc(id)
-    const docSnapshot = await docRef.get()
-
-    return docSnapshot
-}
-
-// POST A NEW HAMSTER
-async function addNewHamster(newHamster) {
-    
-    const docRef = await db.collection(HAMSTERS).add(newHamster)
-    console.log('added doc with id: ' + docRef.id)
-    return { id: docRef.id }
-}
-
-function isHamsterObject(possibleHamster) {
-	if( (typeof possibleHamster) !== 'object' ) {
-		return false
-	}
-	let keys = Object.keys(possibleHamster)
-	if( !keys.includes('name') || !keys.includes('imgName') || !keys.includes('age') || !keys.includes('loves') || !keys.includes('wins') || !keys.includes('games') || !keys.includes('favFood' || !keys.includes('defeats')) ) {
-		return false
-	}
-
-	// kontrollera att possibleHamster.name etc har rimliga värden ?? 
-
-	return true
-}
-
-// PUT (UPDATE AN EXISTING HAMSTER)
-async function updateHamster(id, object) {
-    console.log('Update a hamster object/document...')
-    const docRef = db.collection(HAMSTERS).doc(id)
-    const settings = { merge: true } 
-    docRef.set(object, settings)
-}
-
-function isHamsterUpdate(possibleHamster) {
-	if( (typeof possibleHamster) !== 'object' ) {
-		return false
-	}
-	let keys = Object.keys(possibleHamster)
-	if( keys.includes('name') || keys.includes('imgName') || keys.includes('age') || keys.includes('loves') || keys.includes('wins') || keys.includes('games') || keys.includes('favFood' || keys.includes('defeats')) ) {
-		return true
-	} else {
-        return false
-    }
-
-	// kontrollera att possibleHamster.name etc har rimliga värden ?? 
-}
-
-// DELETE A HAMSTER
-async function deleteHamster(id) {
-    console.log('Deleting a hamster document...')
-    const docRef = db.collection(HAMSTERS).doc(id)
-    const result = await docRef.delete()
-    console.log('Result: ', result)
-}
-
-*/
 
 module.exports = router 
