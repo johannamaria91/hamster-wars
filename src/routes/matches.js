@@ -1,13 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const { deleteDocument, getOne, getAllMatches, addNewMatch, isMatchObject, getAllHamsters, getOneHamster, addNewHamster, isHamsterObject, updateHamster, isHamsterUpdate, deleteHamster } = require('../scripts/hamsterScripts')
+const { deleteDocument, getOne, getAll, addNew } = require('../scripts/databaseFunctions')
+const { isMatchObject } = require('../scripts/validation')
 
-const HAMSTERS = 'hamsters'
 const MATCHES = 'matches'
 
 router.get('/', async (req, res) => {
-    let matchesArray = await getAllMatches()
-    //console.log(hamsterArray);
+    let matchesArray = await getAll(MATCHES)
     res.send(matchesArray)
 })
 
@@ -33,17 +32,14 @@ router.post('/', async (req, res) => {
     let randomHamster2 = await getOneHamster(hamsterArray[randomHamsterIndex2].id)
     const hamster2 = await randomHamster2.data() */
 
-    // CREATE MATCH OBJECT: 
-
+    // CREATE MATCH OBJECT: ???
 
    if( !isMatchObject(req.body) ) {
 		res.status(400).send("that doesn't look like a match")
 		return
 	} 
-    let addMatch = await addNewMatch(req.body)
+    let addMatch = await addNew(req.body, MATCHES)
     res.status(200).send(addMatch)
-
-    
 })
 
 router.delete('/:id', async (req, res) => {
@@ -55,7 +51,6 @@ router.delete('/:id', async (req, res) => {
     await deleteDocument(req.params.id, MATCHES)
     res.sendStatus(200)
     }
-
 })
 
 module.exports = router 

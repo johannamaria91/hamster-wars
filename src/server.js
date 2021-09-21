@@ -3,9 +3,8 @@ const app = express()
 const cors = require('cors')
 const PORT = process.env.PORT || 8090
 const hamsterRouter = require('./routes/hamsters')
-//const cutestRouter = require('./routes/cutest')
 const matchesRouter = require('./routes/matches')
-const {findWonMatches, findWinners, findLosers} = require('./scripts/hamsterScripts')
+const {findWonMatches, winnersLosers} = require('./scripts/databaseFunctions')
 
 app.use( express.urlencoded({extended: true}) )
 app.use( express.json() )
@@ -16,7 +15,6 @@ app.use( '/img', express.static(__dirname + '/../hamsters') )
 
 
 app.use('/hamsters', hamsterRouter)
-//app.use('/cutest', cutestRouter)
 app.use('/matches', matchesRouter)
 
 app.get('/matchWinners/:id', async (req, res) => {
@@ -30,13 +28,13 @@ app.get('/matchWinners/:id', async (req, res) => {
 })
 
 app.get('/winners', async (req, res) => {
-    let winners = await findWinners()
+    let winners = await winnersLosers('wins')
     console.log(winners)
     res.status(200).send(winners)
 })
 
 app.get('/losers', async (req, res) => {
-    let losers = await findLosers()
+    let losers = await winnersLosers('defeats')
     console.log(losers)
     res.status(200).send(losers)
 })

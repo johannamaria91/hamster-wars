@@ -2,18 +2,20 @@ const { connect } = require('../database')
 const db = connect()
 
 const HAMSTERS = 'hamsters'
+const MATCHES = 'matches'
 
-clear();
+clear(HAMSTERS);
+clear(MATCHES);
 
-async function clear() {
-    const hamstersRef = db.collection(HAMSTERS)
-    const hamstersSnapshot = await hamstersRef.get()
+async function clear(collection) {
+    const collectionRef = db.collection(collection)
+    const collectionSnapshot = await collectionRef.get()
     
-    if (hamstersSnapshot.empty) {
+    if (collectionSnapshot.empty) {
         return 
     }
 
-    hamstersSnapshot.forEach(docRef => {
-        hamstersRef.doc(docRef.id).delete()
+    collectionSnapshot.forEach(docRef => {
+        collectionRef.doc(docRef.id).delete()
     })
 }
