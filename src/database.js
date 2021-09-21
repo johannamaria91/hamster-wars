@@ -10,7 +10,7 @@ if (process.env.HAMSTER_WARS_KEY) {
 
 function connect() {
     admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
+        credential: admin.credential.cert(privatekey)
     });
     const db = admin.firestore()
     return db
