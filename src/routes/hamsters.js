@@ -52,6 +52,7 @@ router.put('/:id', async (req, res) => {
         res.sendStatus(404)
     } else {
         const possibleHamster = req.body
+        //console.log(isHamsterUpdate(possibleHamster))
     if (!isHamsterUpdate(possibleHamster)) {
         res.status(400).send('must send hamster update object.')
     } else {

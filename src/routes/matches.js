@@ -21,23 +21,10 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    /* let hamsterArray = await getAllHamsters()
-    let maxValue = hamsterArray.length 
-
-    let randomHamsterIndex1 = Math.floor(Math.random() * maxValue);
-    let randomHamster1 = await getOneHamster(hamsterArray[randomHamsterIndex1].id)
-    const hamster1 = await randomHamster1.data()
-   
-    let randomHamsterIndex2 = Math.floor(Math.random() * maxValue);
-    let randomHamster2 = await getOneHamster(hamsterArray[randomHamsterIndex2].id)
-    const hamster2 = await randomHamster2.data() */
-
-    // CREATE MATCH OBJECT: ???
-
-   if( !isMatchObject(req.body) ) {
+     if( !isMatchObject(req.body) ) {
 		res.status(400).send("that doesn't look like a match")
-		return
-	} 
+        return 
+	}
     let addMatch = await addNew(req.body, MATCHES)
     res.status(200).send(addMatch)
 })
