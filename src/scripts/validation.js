@@ -15,7 +15,7 @@ function isHamsterUpdate(possibleHamster) {
             if (numberKeys.includes(key) && typeof possibleHamster[key] === 'number') {
                 console.log(`key: ${key}.. ${typeof possibleHamster[key]}.. `)
                 return true
-            } else if (stringKeys.includes(key) && typeof possibleHamster[key] === 'string') {
+            } else if (stringKeys.includes(key) && typeof possibleHamster[key] === 'string' && possibleHamster[key].length > 0) {
                 console.log(`key: ${key}.. ${typeof possibleHamster[key]}.. `)
                 return true 
             } else {
@@ -23,18 +23,6 @@ function isHamsterUpdate(possibleHamster) {
                 return false
             }
         })
-        
-
-        /* let trueOrFalse;
-        keys.forEach(key => {
-            if (numberKeys.includes(key) && typeof possibleHamster[key] === 'number') {
-                trueOrFalse = true
-            } else if (stringKeys.includes(key) && typeof possibleHamster[key] === 'string') {
-                trueOrFalse = true
-            } else {
-                trueOrFalse = false
-            }
-        }) */
         console.log(trueOrFalse)
         if (trueOrFalse) {
             return true
@@ -53,7 +41,7 @@ function isMatchObject(possibleMatch) {
         return false
     } else {
         let trueOrFalse = keys.every(key => {
-            if (typeof possibleMatch[key] === 'string') {
+            if (typeof possibleMatch[key] === 'string' && possibleMatch[key].length > 0) {
                 console.log(`key: ${key}.. ${typeof possibleMatch[key]}.. `)
                 return true
         } else {
@@ -83,7 +71,7 @@ function isHamsterObject(possibleHamster) {
             if (numberKeys.includes(key) && typeof possibleHamster[key] === 'number') {
                 console.log(`key: ${key}.. ${typeof possibleHamster[key]}.. `)
                 return true
-            } else if (stringKeys.includes(key) && typeof possibleHamster[key] === 'string') {
+            } else if (stringKeys.includes(key) && typeof possibleHamster[key] === 'string' && possibleHamster[key].length > 0) {
                 console.log(`key: ${key}.. ${typeof possibleHamster[key]}.. `)
                 return true 
             } else {
